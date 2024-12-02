@@ -49,7 +49,7 @@ func parseIds(line string) (int, int, error) {
 // if mapping isn't found, multiple it by 0
 
 func main() {
-	file, err := os.Open("test.txt")
+	file, err := os.Open("input-pc.txt")
 	if err != nil {
 		log.Fatalf("error reading input file: %v", err)
 	}
@@ -97,7 +97,7 @@ func main() {
 			diff = -diff
 		}
 		sum += diff
-		fmt.Printf("%d <-> %d --> %d\n", current_left, current_right, diff)
+		// fmt.Printf("%d <-> %d --> %d\n", current_left, current_right, diff)
 	}
 	if err := scanner.Err(); err != nil {
 		log.Fatalf("Error in scanner: %v", err)
@@ -109,6 +109,15 @@ func main() {
 	fmt.Printf("Computing part 2\n")
 	fmt.Printf("left_list: %v\n", left_list)
 	fmt.Printf("right_freq: %#v\n", right_freq)
-
+	sum_2 := 0
+	for _, val := range left_list {
+		current_freq_in_right, exists := right_freq[val]
+		if exists {
+			sum_2 += val * current_freq_in_right
+		} else {
+			continue
+		}
+	}
+	fmt.Printf("sum_2: %d\n", sum_2)
 	fmt.Printf("Computing part 2 done\n")
 }
