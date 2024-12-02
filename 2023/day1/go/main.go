@@ -1,4 +1,3 @@
-// ownerproof-4275689-1732682827-7fe4bff08805
 package main
 
 import (
@@ -36,6 +35,15 @@ func get_calibration(line string) (first int, last int) {
 		}
 	}
 	return
+}
+
+// use regex to get the index of both occurrences:
+// word that contains either "one", "twp", "three", etc.
+// digit
+// whichever index is least, that will be returned as "first"
+// whichever index is most, that will be returned as "last"
+func get_calibration_2(line string) (first int, last int) {
+
 }
 
 func main() {
