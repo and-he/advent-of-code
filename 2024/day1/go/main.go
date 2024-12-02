@@ -43,8 +43,13 @@ func parseIds(line string) (int, int, error) {
 	return id1, id2, nil
 }
 
+// part two:
+// create a frequency mapping of the right list
+// then for each num in left, multiple left_current by the mapping, if found, from right
+// if mapping isn't found, multiple it by 0
+
 func main() {
-	file, err := os.Open("input.txt")
+	file, err := os.Open("test.txt")
 	if err != nil {
 		log.Fatalf("error reading input file: %v", err)
 	}
@@ -55,22 +60,34 @@ func main() {
 	right_ids := &IntHeap{}
 	heap.Init(left_ids)
 	heap.Init(right_ids)
+
+	// part 2
+	right_freq := make(map[int]int)
+	left_list := []int{}
 	for scanner.Scan() {
 		id_left, id_right, err := parseIds(scanner.Text())
+		// for part 2, as I scan:
+		// - create that right frequency mapping
+		// - append left to a list
 		if err != nil {
 			log.Fatalf("error parsing line [%s]: %v", scanner.Text(), err)
 		}
 		heap.Push(left_ids, id_left)
 		heap.Push(right_ids, id_right)
-		// fmt.Printf("parsed->%d -- %d\n", id_left, id_right)
+
+		// compute right freq
+		_, exists := right_freq[id_right]
+		if !exists {
+			right_freq[id_right] = 1
+		} else {
+			right_freq[id_right] += 1
+		}
+		// create left list
+		left_list = append(left_list, id_left)
 	}
-	// for left_ids.Len() > 0 {
-	// 	fmt.Printf("%d ", heap.Pop(left_ids))
-	// }
-	// fmt.Println("\n------")
-	// for right_ids.Len() > 0 {
-	// 	fmt.Printf("%d ", heap.Pop(right_ids))
-	// }
+
+	// part 1
+	fmt.Printf("Computing part 1\n")
 	sum := 0
 	for (left_ids.Len() > 0) && (right_ids.Len() > 0) {
 		current_left := heap.Pop(left_ids).(int)
@@ -86,4 +103,12 @@ func main() {
 		log.Fatalf("Error in scanner: %v", err)
 	}
 	fmt.Printf("sum = %d\n", sum)
+	fmt.Printf("Computing part 1 done\n")
+
+	// part 2
+	fmt.Printf("Computing part 2\n")
+	fmt.Printf("left_list: %v\n", left_list)
+	fmt.Printf("right_freq: %#v\n", right_freq)
+
+	fmt.Printf("Computing part 2 done\n")
 }
